@@ -1,4 +1,4 @@
-package com.sciubba.apihomework.ui
+package com.sciubba.restaurantfinder.view
 
 import android.annotation.SuppressLint
 import androidx.compose.foundation.clickable
@@ -13,6 +13,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.wrapContentSize
+import androidx.compose.foundation.layout.wrapContentWidth
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -28,6 +29,8 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
+import androidx.compose.material3.TopAppBar
+import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -37,25 +40,26 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalUriHandler
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
-import com.sciubba.apihomework.data.api.model.Location
-import com.sciubba.apihomework.data.api.model.LocationViewModel
-import com.sciubba.apihomework.ui.theme.APIHomeworkTheme
+import androidx.navigation.NavController
+import com.sciubba.restaurantfinder.data.api.model.Location
+import com.sciubba.restaurantfinder.data.api.model.LocationViewModel
+import com.sciubba.restaurantfinder.ui.theme.OnPrimaryLight
+import com.sciubba.restaurantfinder.ui.theme.TertiaryContainerDark
 import com.skydoves.landscapist.glide.GlideImage
 
 // Preview for HomeScreen
-@Preview(showBackground = true)
-@Composable
-fun HomeScreenPreview() {
-    APIHomeworkTheme {
-        HomeScreen(viewModel = LocationViewModel().apply {
-            // Use fake data for preview
-            getLocations()
-        })
-    }
-}
+//@Preview(showBackground = true)
+//@Composable
+//fun HomeScreenPreview() {
+//    APIHomeworkTheme {
+//        HomeScreen(viewModel = LocationViewModel().apply {
+//            // Use fake data for preview
+//            getLocations()
+//        })
+//    }
+//}
 
 
 //@Preview(showBackground = true)
@@ -95,7 +99,7 @@ fun HomeScreenPreview() {
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun HomeScreen(viewModel: LocationViewModel = viewModel()) {
+fun HomeScreen(navController: NavController, viewModel: LocationViewModel = viewModel()) {
     // Use LaunchedEffect to make the API call
     LaunchedEffect(Unit) {
         viewModel.getLocations()
@@ -103,25 +107,25 @@ fun HomeScreen(viewModel: LocationViewModel = viewModel()) {
 
     Scaffold (
 
-//        topBar = {
-//            TopAppBar(
-//                title = {
-//                    Text(
-//                        text = "Restaurant Finder",
-//                        style = MaterialTheme.typography.titleLarge,
-//                        modifier = Modifier
-//                            .fillMaxWidth()
-//                            .wrapContentWidth(Alignment.CenterHorizontally),
-//                           // .padding(top = 20.dp),
-//                        color = OnPrimaryLight
-//                    )
-//                },
-//                colors = TopAppBarDefaults.centerAlignedTopAppBarColors(
-//                    containerColor = TertiaryContainerDark
-//                )
-//                // add nav drawer later? probably bottom app bar instead
-//            )
-//        }, // topBar
+        topBar = {
+            TopAppBar(
+                title = {
+                    Text(
+                        text = "Restaurant Finder",
+                        style = MaterialTheme.typography.titleLarge,
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .wrapContentWidth(Alignment.CenterHorizontally),
+                           // .padding(top = 20.dp),
+                        color = OnPrimaryLight
+                    )
+                },
+                colors = TopAppBarDefaults.centerAlignedTopAppBarColors(
+                    containerColor = TertiaryContainerDark
+                )
+                // add nav drawer later? probably bottom app bar instead
+            )
+        }, // topBar
 
         content = {
             if(viewModel.errorMessage.isEmpty()) {
@@ -142,7 +146,17 @@ fun HomeScreen(viewModel: LocationViewModel = viewModel()) {
                     }//if ot empty
 
                     items(viewModel.locationList) {location ->
-                        LocationCard(location = location)
+                        LocationCard(
+                            location = location,
+                            navController = navController,
+                            onBrowseRestaurantsClicked = {
+                                viewModel.fetchNearbyRestaurants(
+                                    location.latitude,
+                                    location.longitude
+                                )
+                                navController.navigate("RestaurantList")
+                            }
+                        )
                     }//items
 
                 }//LazyColumn
@@ -156,7 +170,7 @@ fun HomeScreen(viewModel: LocationViewModel = viewModel()) {
 }//HomeScreen
 
 @Composable
-fun LocationCard(location: Location) {
+fun LocationCard(navController: NavController,  location: Location, onBrowseRestaurantsClicked: () -> Unit) {
 
     //handle the weburl for a location
     val uriHandler = LocalUriHandler.current
@@ -234,7 +248,7 @@ fun LocationCard(location: Location) {
 
             if (description.length > 100) {
                 Text(
-                    text = if (isExpanded) "Read Less" else "Read More",
+                    text = if (isExpanded) "...read Less" else "...read more",
                     style = MaterialTheme.typography.bodySmall,
                     color = MaterialTheme.colorScheme.primary,
                     modifier = Modifier
@@ -268,7 +282,10 @@ fun LocationCard(location: Location) {
 
             val onBrowseRestaurantsClicked = false
             Button(
-                onClick = {},
+                onClick = {
+                    //go to the Restaurant View with the argument from the viewmodel
+
+                },
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(top = 16.dp), // Adjust padding as needed
@@ -278,5 +295,5 @@ fun LocationCard(location: Location) {
             }
         }//Column
     }
-}
+}//LocationCard
 

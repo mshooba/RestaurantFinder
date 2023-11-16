@@ -4,11 +4,11 @@ plugins {
 }
 
 android {
-    namespace = "com.sciubba.apihomework"
+    namespace = "com.sciubba.restaurantfinder"
     compileSdk = 34
 
     defaultConfig {
-        applicationId = "com.sciubba.apihomework"
+        applicationId = "com.sciubba.restaurantfinder"
         minSdk = 21
         targetSdk = 34
         versionCode = 1

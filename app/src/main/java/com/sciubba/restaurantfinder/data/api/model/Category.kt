@@ -1,9 +1,9 @@
-package com.sciubba.apihomework.data.api.model
+package com.sciubba.restaurantfinder.data.api.model
 
 
 import com.google.gson.annotations.SerializedName
 
-data class Subcategory(
+data class Category(
     @SerializedName("localized_name")
     val localizedName: String,
     @SerializedName("name")

@@ -1,4 +1,4 @@
-package com.sciubba.apihomework.ui.theme
+package com.sciubba.restaurantfinder.ui.theme
 
 import android.app.Activity
 import android.os.Build

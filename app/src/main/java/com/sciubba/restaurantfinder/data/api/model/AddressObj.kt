@@ -1,4 +1,4 @@
-package com.sciubba.apihomework.data.api.model
+package com.sciubba.restaurantfinder.data.api.model
 
 
 import com.google.gson.annotations.SerializedName

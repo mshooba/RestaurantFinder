@@ -13,5 +13,5 @@ dependencyResolutionManagement {
     }
 }
 
-rootProject.name = "APIHomework"
+rootProject.name = "RestaurantFinder"
 include(":app")

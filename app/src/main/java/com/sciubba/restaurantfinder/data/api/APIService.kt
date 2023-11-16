@@ -1,6 +1,6 @@
 
-import com.sciubba.apihomework.data.api.model.Location
-import com.sciubba.apihomework.data.api.model.NearbyLocation
+import com.sciubba.restaurantfinder.data.api.model.Location
+import com.sciubba.restaurantfinder.data.api.model.NearbyLocation
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
@@ -37,12 +37,20 @@ interface APIService {
         //could not make connection to API without using logging interceptor and OKHttp stuff
         fun getInstance(): APIService {
             if (apiService == null) {
-               //use logger to see HTTP errors and such
+                // Use logger to see HTTP errors and such
                 val logging = HttpLoggingInterceptor()
                 logging.setLevel(HttpLoggingInterceptor.Level.BASIC) // Change to Level.BODY for more details
 
+                // Create a custom OkHttpClient with a new interceptor for the Referer header
                 val client = OkHttpClient.Builder()
                     .addInterceptor(logging) // Add the logging interceptor to OkHttpClient
+                    .addInterceptor { chain -> // Add a new interceptor for the Referer header
+                        val originalRequest = chain.request()
+                        val updatedRequest = originalRequest.newBuilder()
+                            .header("Referer", "https://www.mattsciubba.com")
+                            .build()
+                        chain.proceed(updatedRequest)
+                    }
                     .build()
 
                 //init retrofit

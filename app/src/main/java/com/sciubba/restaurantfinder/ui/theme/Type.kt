@@ -1,4 +1,4 @@
-package com.sciubba.apihomework.ui.theme
+package com.sciubba.restaurantfinder.ui.theme
 
 import androidx.compose.material3.Typography
 import androidx.compose.ui.text.TextStyle
@@ -6,7 +6,7 @@ import androidx.compose.ui.text.font.Font
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.sp
-import com.sciubba.apihomework.R
+import com.sciubba.restaurantfinder.R
 
 // Set of Material typography styles to start with
 

@@ -1,4 +1,4 @@
-package com.sciubba.apihomework
+package com.sciubba.restaurantfinder
 
 import androidx.test.platform.app.InstrumentationRegistry
 import androidx.test.ext.junit.runners.AndroidJUnit4

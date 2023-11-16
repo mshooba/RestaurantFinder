@@ -1,4 +1,4 @@
-package com.sciubba.apihomework
+package com.sciubba.restaurantfinder
 
 import org.junit.Test
 
