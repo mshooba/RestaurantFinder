@@ -14,10 +14,11 @@
         android:theme="@style/Theme.APIHomework"
         tools:targetApi="31">
         <activity
-            android:name=".MainActivity"
+            android:name="com.sciubba.restaurantfinder.ui.MainActivity"
             android:exported="true"
-            android:label="@string/app_name"
-            android:theme="@style/Theme.APIHomework">
+            android:label="RestaurantFinder"
+            android:theme="@style/Theme.APIHomework"
+            tools:ignore="MissingClass">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 

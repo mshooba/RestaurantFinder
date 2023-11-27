@@ -1,14 +1,9 @@
-package com.sciubba.restaurantfinder.data.api.model
+package com.sciubba.restaurantfinder.data.api.model.Location
+
+
 import com.google.gson.annotations.SerializedName
 
-data class Location(
-    /**
-     * adding lat and long causes error only way to get restaurants for locations?
-     *
-     * I think the lat and long is nested? but the JSON plugin didn't pick it up
-     */
-    @SerializedName("image_name")
-    val imageName: String,
+data class LocationItem(
     @SerializedName("address_obj")
     val addressObj: AddressObj,
     @SerializedName("ancestors")

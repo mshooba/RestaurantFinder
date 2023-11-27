@@ -1,35 +1,39 @@
 
-import com.sciubba.restaurantfinder.data.api.model.Location
-import com.sciubba.restaurantfinder.data.api.model.NearbyLocation
+import com.sciubba.restaurantfinder.data.api.model.Location.Location
+import com.sciubba.restaurantfinder.data.api.model.Location.LocationItem
+import com.sciubba.restaurantfinder.data.api.model.Location.RestaurantItem
+import com.sciubba.restaurantfinder.data.api.model.Review.ReviewsItem
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import retrofit2.http.GET
-import retrofit2.http.Path
-import retrofit2.http.Query
 
 // The BASE_URL should be just the base path
-const val BASE_URL = "https://api.content.tripadvisor.com/api/v1/"
+//const val BASE_URL = "https://api.content.tripadvisor.com/api/v1/"
+
+//new base url for the koyeb API
+const val BASE_URL = "https://eastern-rubie-mattsciubba.koyeb.app/api/"
 
 interface APIService {
 
     //GETTER FOR THE LOCATION
-    @GET("location/{locationId}/details")
-    suspend fun getLocationDetails(
-        @Path("locationId") locationId: String,
-        @Query("key") apiKey: String, // No default value here
-        @Query("language") language: String = "en",
-        @Query("currency") currency: String = "USD"
-    ): Location
+    @GET("locationdetails")
+    suspend fun getLocationDetails(): List<LocationItem>
 
-    @GET("location/nearby_search")
-    suspend fun getNearbyRestaurants(
-        @Query("latLong") latLong: String,
-        @Query("category") category: String = "restaurants",
-        @Query("key") apiKey: String,
+    @GET("locations")
+    suspend fun getLocations(): Location
 
-    ): List<NearbyLocation>
+    @GET("restaurants")
+    suspend fun getRestaurants(): List<RestaurantItem>
+
+    @GET("reviews")
+    suspend fun getAllReviews(): List<ReviewsItem>
+
+
+
+
+
 
     companion object {
         private var apiService: APIService? = null
@@ -39,7 +43,7 @@ interface APIService {
             if (apiService == null) {
                 // Use logger to see HTTP errors and such
                 val logging = HttpLoggingInterceptor()
-                logging.setLevel(HttpLoggingInterceptor.Level.BASIC) // Change to Level.BODY for more details
+                logging.setLevel(HttpLoggingInterceptor.Level.BODY) // Change to Level.BODY for more details
 
                 // Create a custom OkHttpClient with a new interceptor for the Referer header
                 val client = OkHttpClient.Builder()

@@ -7,12 +7,10 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxHeight
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.layout.wrapContentWidth
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
@@ -23,7 +21,6 @@ import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
-import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
@@ -32,7 +29,6 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -41,69 +37,22 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalUriHandler
 import androidx.compose.ui.unit.dp
-import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
-import com.sciubba.restaurantfinder.data.api.model.Location
+import com.sciubba.restaurantfinder.data.api.model.Location.LocationItem
 import com.sciubba.restaurantfinder.data.api.model.LocationViewModel
 import com.sciubba.restaurantfinder.ui.theme.OnPrimaryLight
 import com.sciubba.restaurantfinder.ui.theme.TertiaryContainerDark
 import com.skydoves.landscapist.glide.GlideImage
 
-// Preview for HomeScreen
-//@Preview(showBackground = true)
-//@Composable
-//fun HomeScreenPreview() {
-//    APIHomeworkTheme {
-//        HomeScreen(viewModel = LocationViewModel().apply {
-//            // Use fake data for preview
-//            getLocations()
-//        })
-//    }
-//}
-
-
-//@Preview(showBackground = true)
-//@Composable
-//fun LocationCardPreview() {
-//    APIHomeworkTheme {
-//        LocationCard(
-//            location = Location(
-//                imageName = "",
-//                addressObj = AddressObj(
-//                    addressString = "",
-//                    city = "",
-//                    country = ""
-//                ),
-//                ancestors = listOf(),
-//                awards = listOf(),
-//                category = Category(
-//                    localizedName = "",
-//                    name = ""
-//                ),
-//                description = "",
-//                latitude = "",
-//                locationId = "",
-//                longitude = "",
-//                name = "",
-//                neighborhoodInfo = listOf(),
-//                seeAllPhotos = "",
-//                subcategory = listOf(),
-//                timezone = "",
-//                webUrl = ""
-//            )
-//        )
-//    }
-//}
-
 
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun HomeScreen(navController: NavController, viewModel: LocationViewModel = viewModel()) {
-    // Use LaunchedEffect to make the API call
-    LaunchedEffect(Unit) {
-        viewModel.getLocations()
-    }
+fun HomeScreen(navController: NavController,
+               viewModel: LocationViewModel  )
+{
+   // val viewModel: LocationViewModel = viewModel()
+
 
     Scaffold (
 
@@ -128,40 +77,32 @@ fun HomeScreen(navController: NavController, viewModel: LocationViewModel = view
         }, // topBar
 
         content = {
-            if(viewModel.errorMessage.isEmpty()) {
-
-                LazyColumn(modifier = Modifier
-                    .fillMaxHeight()
-                    .padding(top = 80.dp)
-                ) {
-                    //if the list is empty are fetching the json so show a spinner thingy
+            if (viewModel.errorMessage.isEmpty()) {
+                LazyColumn(modifier = Modifier.fillMaxHeight()) {
+                    // Check if the location list is empty
                     if (viewModel.locationList.isEmpty()) {
                         item {
-                            CircularProgressIndicator(
-                                modifier = Modifier
-                                    .fillMaxSize()
-                                    .wrapContentSize(align = Alignment.Center)
-                            )//circular thingy
-                        }//item
-                    }//if ot empty
+//                            CircularProgressIndicator(
+//                                modifier = Modifier
+//                                    .fillMaxSize()
+//                                    .wrapContentSize(align = Alignment.Center)
+//                            )
+                        }
+                    } else {
+                        items(viewModel.locationList) { location ->
 
-                    items(viewModel.locationList) {location ->
-                        LocationCard(
-                            location = location,
-                            navController = navController,
-                            onBrowseRestaurantsClicked = {
-                                viewModel.fetchNearbyRestaurants(
-                                    location.latitude,
-                                    location.longitude
+                                LocationCard(
+                                    navController = navController,
+                                    location = location,
+                                    viewModel = viewModel
+
                                 )
-                                navController.navigate("RestaurantList")
-                            }
-                        )
-                    }//items
 
-                }//LazyColumn
 
-                //dont have an error message
+                        }
+                    }
+
+                }
             } else {
                 //show the message
                 Text(viewModel.errorMessage)
@@ -170,12 +111,17 @@ fun HomeScreen(navController: NavController, viewModel: LocationViewModel = view
 }//HomeScreen
 
 @Composable
-fun LocationCard(navController: NavController,  location: Location, onBrowseRestaurantsClicked: () -> Unit) {
+fun LocationCard(navController: NavController,
+                 location: LocationItem,
+                 viewModel: LocationViewModel
+
+) {
 
     //handle the weburl for a location
     val uriHandler = LocalUriHandler.current
     //state for exapanding the item description
     var isExpanded by remember { mutableStateOf(false) }
+  //  val viewModel: LocationViewModel = viewModel()
 
     Card(
         shape = RoundedCornerShape(10.dp),
@@ -199,9 +145,9 @@ fun LocationCard(navController: NavController,  location: Location, onBrowseRest
                     .aspectRatio(1.2f) // 16:9 aspect ratio, adjust as needed
                     .padding(bottom = 16.dp),
                 loading = {
-                    CircularProgressIndicator(
-                        modifier = Modifier.align(Alignment.Center)
-                    )
+//                    CircularProgressIndicator(
+//                        modifier = Modifier.align(Alignment.Center)
+//                    )
                 },
                 // Provide the failure composable to be shown on image request failure
                 failure = {
@@ -280,12 +226,15 @@ fun LocationCard(navController: NavController,  location: Location, onBrowseRest
                 )
             }
 
-            val onBrowseRestaurantsClicked = false
+          //  val onBrowseRestaurantsClicked = false
             Button(
                 onClick = {
-                    //go to the Restaurant View with the argument from the viewmodel
+                    viewModel.onLocationClicked(location) // Set the clicked location
+                    viewModel.getRestaurants {
+                        navController.navigate("RestaurantList")
+                    }
 
-                },
+                    },
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(top = 16.dp), // Adjust padding as needed

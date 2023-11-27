@@ -51,7 +51,7 @@ android {
 
 dependencies {
     implementation("androidx.core:core-ktx:1.12.0")
-    implementation ("androidx.compose.runtime:runtime-livedata:latest_version")
+
 
     //retrofit for api stuff
     implementation("com.squareup.retrofit2:retrofit:2.9.0")
@@ -68,8 +68,17 @@ dependencies {
     //glide
     implementation("com.github.skydoves:landscapist-glide:2.2.11")
 
+    //icons
+    implementation("androidx.compose.material:material-icons-extended:1.6.0-beta01")
+
+    //datastore
+    implementation("androidx.datastore:datastore:1.1.0-alpha06")
+
+    //datastore preferences
+    implementation("androidx.datastore:datastore-preferences:1.1.0-alpha05")
+
     implementation("androidx.lifecycle:lifecycle-runtime-ktx:2.6.2")
-    implementation("androidx.activity:activity-compose:1.8.0")
+    implementation("androidx.activity:activity-compose:1.8.1")
     implementation(platform("androidx.compose:compose-bom:2023.03.00"))
     implementation("androidx.compose.ui:ui")
     implementation("androidx.compose.ui:ui-graphics")
