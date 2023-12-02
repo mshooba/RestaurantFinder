@@ -7,6 +7,9 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
+import androidx.datastore.core.DataStore
+import androidx.datastore.preferences.core.Preferences
+import androidx.datastore.preferences.preferencesDataStore
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.sciubba.restaurantfinder.data.api.model.Location.Data
@@ -19,21 +22,41 @@ import kotlinx.coroutines.launch
 
 
 //datastore for favorited restaurants
-//val Context.dataStore: DataStore<Preferences> by preferencesDataStore("Favorites")
+val Context.dataStore: DataStore<Preferences> by preferencesDataStore("Favorites")
 
-class LocationViewModel(private val context: Context) : ViewModel() {
+class LocationViewModel(context: Context) : ViewModel() {
 
+    //private val _allFavoriteRestaurantDetails = mutableStateListOf<Data>()
     private val favoriteRestaurantsPreferences = FavoriteRestaurantsPreferences(context)
-    //This will hold the ID's of the favorite restaurants
+    //hold the ID's of the favorite restaurants
     var favoriteRestaurantIdsFlow: Flow<Set<String>> = flowOf(setOf())
 
     init {
+        Log.d("LocationViewModel", "Initializing ViewModel")
+        //load restauarants and favorites when the app loads
         loadFavoriteRestaurants()
+        loadAllRestaurants()
+    }
+
+    private fun loadAllRestaurants() {
+        viewModelScope.launch {
+            try {
+                Log.d("LocationViewModel", "Loading all restaurants")
+                //use the api
+                val restaurants = apiService.getRestaurants().flatMap { it.data }
+                _restaurantList.clear()
+                _restaurantList.addAll(restaurants)
+                Log.d("LocationViewModel", "Loaded all restaurants: ${_restaurantList.size}")
+            } catch (e: Exception) {
+                Log.e("LocationViewModel", "Error loading all restaurants: ${e.message}")
+            }
+        }
     }
 
     private fun loadFavoriteRestaurants() {
         viewModelScope.launch {
             favoriteRestaurantIdsFlow = favoriteRestaurantsPreferences.getFavoriteRestaurants()
+            Log.d("LocationViewModel", "Favorites loaded: ${favoriteRestaurantIdsFlow.first()}")
         }
     }
 
@@ -91,11 +114,12 @@ class LocationViewModel(private val context: Context) : ViewModel() {
         "294217"
     ) // Add more IDs ?
 
+
+    // Fetch all restaurant details and store them in _restaurantList
     fun getRestaurants(onComplete: (() -> Unit)? = null) {
         viewModelScope.launch {
             try {
-                val restaurantItems = apiService.getRestaurants()
-                Log.d("ViewModel", "Fetched restaurants: ${restaurantItems.size}")
+                val allRestaurants = apiService.getRestaurants().flatMap { it.data }
 
                 // Clear the current restaurant list
                 _restaurantList.clear()
@@ -103,23 +127,22 @@ class LocationViewModel(private val context: Context) : ViewModel() {
                 // Filter and add restaurants that match the country of the clicked location
                 if (::clickedLocation.isInitialized) {
                     val locationCountry = clickedLocation.addressObj.country
-                    restaurantItems.forEach { item ->
-                        val filteredRestaurants = item.data.filter {
-                            it.addressObj.country == locationCountry
-                        }
-                        _restaurantList.addAll(filteredRestaurants)
+                    val filteredRestaurants = allRestaurants.filter {
+                        it.addressObj.country == locationCountry
                     }
+                    _restaurantList.addAll(filteredRestaurants)
                 }
 
                 isRestaurantsFetched = true
-                Log.d("ViewModel", "Updated restaurant list size: ${_restaurantList.size}")
             } catch (e: Exception) {
-                Log.e("ViewModel", "Error fetching restaurants: ${e.message}")
+                errorMessage = "Error fetching restaurants: ${e.message}"
             } finally {
                 onComplete?.invoke()
             }
         }
     }
+
+
 
     fun getRestaurantByLocationId(locationId: String): Data? {
         return _restaurantList.firstOrNull { it.locationId == locationId }
@@ -166,25 +189,44 @@ class LocationViewModel(private val context: Context) : ViewModel() {
     }
 
     //favorite functionality
+
     fun toggleFavoriteRestaurant(restaurantId: String) {
         viewModelScope.launch {
-            val isFavorite = favoriteRestaurantsPreferences.getFavoriteRestaurants()
-                .first()
-                .contains(restaurantId)
+            try {
+                val currentFavorites = favoriteRestaurantIdsFlow.first().toMutableSet()
+                val wasFavorite = currentFavorites.contains(restaurantId)
 
-            if (isFavorite) {
-                favoriteRestaurantsPreferences.removeFavoriteRestaurant(restaurantId)
-            } else {
-                favoriteRestaurantsPreferences.addFavoriteRestaurant(restaurantId)
+                if (wasFavorite) {
+                    currentFavorites.remove(restaurantId)
+                    favoriteRestaurantsPreferences.removeFavoriteRestaurant(restaurantId)
+                } else {
+                    currentFavorites.add(restaurantId)
+                    favoriteRestaurantsPreferences.addFavoriteRestaurant(restaurantId)
+                }
+
+                favoriteRestaurantsPreferences.saveFavoriteRestaurants(currentFavorites)
+                favoriteRestaurantIdsFlow = favoriteRestaurantsPreferences.getFavoriteRestaurants()
+
+
+
+                Log.d("LocationViewModel", "Toggled favorite restaurant: $restaurantId")
+            } catch (e: Exception) {
+                Log.e("LocationViewModel", "Error toggling favorite restaurant: ${e.message}")
             }
         }
     }
 
-    private fun logFavoriteRestaurants() {
-        Log.d("Favorites", "Current favorites: ${_favoriteRestaurantIds.joinToString()}")
+    private fun updateRestaurantListBasedOnFavorites(favoriteIds: Set<String>) {
+        viewModelScope.launch {
+            // Assuming apiService.getRestaurants() fetches the full list of restaurants
+            val allRestaurants = apiService.getRestaurants().flatMap { it.data }
+            _restaurantList.clear()
+            _restaurantList.addAll(allRestaurants.filter { it.locationId in favoriteIds })
+            Log.d("LocationViewModel", "Updated restaurant list based on favorites")
+        }
     }
 
-    // Function to check if a restaurant is in favorites
+
 
 }//ViewModel
 

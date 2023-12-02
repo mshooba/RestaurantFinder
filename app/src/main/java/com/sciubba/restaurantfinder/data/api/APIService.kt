@@ -10,7 +10,7 @@ import retrofit2.converter.gson.GsonConverterFactory
 import retrofit2.http.GET
 
 // The BASE_URL should be just the base path
-//const val BASE_URL = "https://api.content.tripadvisor.com/api/v1/"
+//const val BASE_URL = "https://api.content.tripadvisor.com/api/"
 
 //new base url for the koyeb API
 const val BASE_URL = "https://eastern-rubie-mattsciubba.koyeb.app/api/"

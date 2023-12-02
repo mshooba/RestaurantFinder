@@ -65,7 +65,7 @@ fun HomeScreen(navController: NavController,
                         modifier = Modifier
                             .fillMaxWidth()
                             .wrapContentWidth(Alignment.CenterHorizontally),
-                           // .padding(top = 20.dp),
+
                         color = OnPrimaryLight
                     )
                 },
@@ -78,7 +78,10 @@ fun HomeScreen(navController: NavController,
 
         content = {
             if (viewModel.errorMessage.isEmpty()) {
-                LazyColumn(modifier = Modifier.fillMaxHeight()) {
+                LazyColumn(modifier = Modifier
+                    .fillMaxHeight()
+                    .padding(top = 60.dp)
+                ) {
                     // Check if the location list is empty
                     if (viewModel.locationList.isEmpty()) {
                         item {
@@ -128,7 +131,7 @@ fun LocationCard(navController: NavController,
         modifier = Modifier
             .fillMaxWidth()
             .padding(horizontal = 16.dp)
-            .padding(top = 28.dp),
+            .padding(top = 32.dp),
 
         elevation = CardDefaults.cardElevation(defaultElevation = 2.dp)
     ) {
@@ -143,8 +146,9 @@ fun LocationCard(navController: NavController,
                 modifier = Modifier
                     .fillMaxWidth()
                     .aspectRatio(1.2f) // 16:9 aspect ratio, adjust as needed
-                    .padding(bottom = 16.dp),
+                    .padding(bottom = 24.dp, top = 24.dp),
                 loading = {
+                          //Deprecated???
 //                    CircularProgressIndicator(
 //                        modifier = Modifier.align(Alignment.Center)
 //                    )

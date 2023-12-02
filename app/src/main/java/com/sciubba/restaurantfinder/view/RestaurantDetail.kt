@@ -13,8 +13,13 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
+import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Star
+import androidx.compose.material.icons.filled.StarBorder
 import androidx.compose.material3.Button
 import androidx.compose.material3.Divider
+import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
@@ -102,59 +107,64 @@ fun RestaurantDetail(locationId: String?,
 
 @Composable
 fun ReviewItem(review: ReviewData) {
-    Column(
-        modifier = Modifier
-            .fillMaxWidth()
-            .padding(16.dp)
-    ) {
-        Row(
-            verticalAlignment = Alignment.CenterVertically
+
+
+        Column(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(16.dp)
+
         ) {
-            // User Avatar with GlideImage
-            Surface(
-                shape = MaterialTheme.shapes.small,
-                modifier = Modifier.size(48.dp),
-                color = MaterialTheme.colorScheme.surfaceVariant
+            Row(
+                verticalAlignment = Alignment.CenterVertically
             ) {
-                review.user.avatar.thumbnail?.let { url ->
-                    GlideImage(
-                        imageModel = { url },
+                // User Avatar with GlideImage
+                Surface(
+                    shape = CircleShape,
+                    modifier = Modifier.size(48.dp),
+                    color = MaterialTheme.colorScheme.surfaceVariant
+                ) {
+                    review.user.avatar.thumbnail?.let { url ->
+                        GlideImage(
+                            imageModel = { url },
 
-                        modifier = Modifier.fillMaxSize()
-                    )
+                            modifier = Modifier.fillMaxSize()
+                        )
+                    }
                 }
-            }
 
-            Spacer(modifier = Modifier.width(8.dp))
 
-            // Username and Location
-            Column {
-                Text(
-                    text = review.user.username ?: "Unknown User",
-                    style = MaterialTheme.typography.bodyMedium
-                )
-                review.user.userLocation.name?.let { locationName ->
+                Spacer(modifier = Modifier.width(8.dp))
+
+                // Username and Location
+                Column {
                     Text(
-                        text = locationName,
-                        style = MaterialTheme.typography.bodySmall,
-                        color = Color.Gray
+                        text = review.user.username ?: "Unknown User",
+                        style = MaterialTheme.typography.bodyMedium
                     )
+                    review.user.userLocation.name?.let { locationName ->
+                        Text(
+                            text = locationName,
+                            style = MaterialTheme.typography.bodySmall,
+                            color = Color.Gray
+                        )
+                    }
                 }
             }
-        }
 
-        Spacer(modifier = Modifier.height(8.dp))
+            Spacer(modifier = Modifier.height(8.dp))
 
-        // Review Title
-        Text(
-            text = review.title ?: "No Title",
-            style = MaterialTheme.typography.titleMedium
-        )
+            // Review Title
+            Text(
+                text = review.title ?: "No Title",
+                style = MaterialTheme.typography.titleMedium,
+                color = MaterialTheme.colorScheme.primary
+            )
 
-        Spacer(modifier = Modifier.padding(5.dp))
+            Spacer(modifier = Modifier.padding(5.dp))
 
-        // Rating and Published Date
-        Row {
+            // Rating and Published Date
+            Row {
 //            GlideImage(
 //                imageModel = { review.ratingImageUrl }, // Pass the URL directly
 //            //    contentDescription = null, // You can set this to null since it's decorative
@@ -169,30 +179,48 @@ fun ReviewItem(review: ReviewData) {
 //            )
 
 
-            Spacer(modifier = Modifier.width(8.dp))
-            review.publishedDate?.let { dateStr ->
-                val formattedDate = formatDate(dateStr)
-                Text(
-                    text = "Published: $formattedDate",
-                    style = MaterialTheme.typography.bodySmall,
-                    modifier = Modifier.weight(1f)
-                )
+                //   Spacer(modifier = Modifier.width(8.dp))
+                review.publishedDate?.let { dateStr ->
+                    val formattedDate = formatDate(dateStr)
+                    Text(
+                        text = "Published: $formattedDate",
+                        style = MaterialTheme.typography.bodyMedium,
+                        color = MaterialTheme.colorScheme.tertiary
+                        //  modifier = Modifier.weight(1f)
+                    )
+                }
+
+                Spacer(modifier = Modifier.padding(10.dp))
             }
-            
-            Spacer(modifier = Modifier.padding(10.dp))
+
+            //rating
+
+
+            Spacer(modifier = Modifier.height(5.dp))
+
+            //Star Rating
+            Row {
+                (1..5).forEach { starNumber ->
+                    Icon(
+                        imageVector = if (starNumber <= review.rating) Icons.Filled.Star else Icons.Filled.StarBorder,
+                        contentDescription = "Rating Star",
+                        tint = MaterialTheme.colorScheme.tertiary, // Change color as needed
+                        modifier = Modifier.size(16.dp) // Small size for the star
+                    )
+                }
+            }
+            Spacer(modifier = Modifier.height(10.dp))
+
+            // Review body
+            Text(
+                text = review.text ?: "No Review Text",
+                style = MaterialTheme.typography.bodyMedium
+            )
+
+            // Add more details as needed (e.g., subratings, travel date, etc.)
         }
-
-        Spacer(modifier = Modifier.height(4.dp))
-
-        // Review Text
-        Text(
-            text = review.text ?: "No Review Text",
-            style = MaterialTheme.typography.bodyMedium
-        )
-
-        // Add more details as needed (e.g., subratings, travel date, etc.)
     }
-}
+
 
 
 @Composable
@@ -205,7 +233,7 @@ fun NoReviewsUI(onWriteReview: () -> Unit) {
         verticalArrangement = Arrangement.Center
     ) {
         Text(
-            text = "Hey, this restaurant has no reviews yet. Wanna leave a review?",
+            text = "This restaurant has no reviews yet. Leave a review?",
             style = MaterialTheme.typography.bodyLarge,
             modifier = Modifier.padding(bottom = 16.dp)
         )

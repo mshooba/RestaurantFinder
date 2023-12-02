@@ -41,13 +41,15 @@ fun BottomBar(
             ) {
                 Icon(
                     imageVector = if (isHomeSelected) Icons.Filled.Home else Icons.Outlined.Home,
-                    contentDescription = "Home"
+                    contentDescription = "Home",
+                    tint = if (isHomeSelected) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.secondary // Conditional tint
 
                 )
             }
             Text(
                 text = "Home",
-                style = MaterialTheme.typography.labelSmall
+                style = MaterialTheme.typography.labelSmall,
+                color = if (isHomeSelected) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.secondary // Conditional tint
             )
         }
 
@@ -65,12 +67,14 @@ fun BottomBar(
             ) {
                 Icon(
                     imageVector = if (isFavoritesSelected) Icons.Filled.Favorite else Icons.Outlined.FavoriteBorder,
-                    contentDescription = "Favorites"
+                    contentDescription = "Favorites",
+                    tint = if (isFavoritesSelected) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.secondary
                 )
             }
             Text(
                 text = "Favorites",
-                style = MaterialTheme.typography.labelSmall
+                style = MaterialTheme.typography.labelSmall,
+                color = if (isFavoritesSelected) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.secondary
             )
         }
 
@@ -88,12 +92,15 @@ fun BottomBar(
             ) {
                 Icon(
                     imageVector = if (isAboutSelected) Icons.Filled.Info else Icons.Outlined.Info,
-                    contentDescription = "About"
+                    contentDescription = "About",
+                    tint = if (isAboutSelected) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.secondary
+
                 )
             }
             Text(
                 text = "About",
-                style = MaterialTheme.typography.labelSmall
+                style = MaterialTheme.typography.labelSmall,
+                color = if (isAboutSelected) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.secondary
             )
         }
 
