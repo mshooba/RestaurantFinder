@@ -16,7 +16,6 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBackIosNew
 import androidx.compose.material.icons.filled.Favorite
 import androidx.compose.material.icons.filled.FavoriteBorder
-import androidx.compose.material3.Button
 import androidx.compose.material3.Divider
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
@@ -62,8 +61,8 @@ fun RestaurantList(
             TopAppBar(
                 title = {
                     Text(
-                        text = "Back",
-                        style = MaterialTheme.typography.titleMedium,
+                        text = "Restaurants",
+                        style = MaterialTheme.typography.titleLarge,
                         modifier = Modifier
                             .fillMaxWidth(),
                            // .wrapContentWidth(Alignment.CenterHorizontally),
@@ -72,6 +71,7 @@ fun RestaurantList(
                     )
                 },
                 navigationIcon = {
+                    //navigate to the homescreen on click
                     IconButton(onClick = {navController.navigate("home") }) {
                         Icon(
                             imageVector = Icons.Filled.ArrowBackIosNew,
@@ -79,8 +79,6 @@ fun RestaurantList(
                         )
                     }
                 },
-
-
                 colors = TopAppBarDefaults.centerAlignedTopAppBarColors(
                     containerColor = TertiaryContainerDark
                 )
@@ -142,11 +140,13 @@ fun RestaurantListItem(
     ) {
         // Image on the left
         GlideImage(
+            //use the image api to get the appropriate ime
             imageModel = {"https://ik.imagekit.io/restappimages/locations/${restaurant.locationId}.jpg"},
             loading = {
                 // Your loading composable here
             },
             failure = {
+                //didn't work
                 Text("Image Request Failed", modifier = Modifier.align(Alignment.Center))
             },
             modifier = Modifier
@@ -228,16 +228,6 @@ fun RestaurantListItem(
 }
 
 
-@Composable
-fun AddToFavoritesButton(onClick: () -> Unit) {
-    // You can style this button as needed
-    Button(
-        onClick = onClick,
-        modifier = Modifier.padding(start = 8.dp),
-    ) {
-        Text(text = "Add to Favorites")
-    }
-}
 
 
 

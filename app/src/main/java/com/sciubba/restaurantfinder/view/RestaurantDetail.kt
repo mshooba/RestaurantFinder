@@ -108,7 +108,6 @@ fun RestaurantDetail(locationId: String?,
 @Composable
 fun ReviewItem(review: ReviewData) {
 
-
         Column(
             modifier = Modifier
                 .fillMaxWidth()
@@ -165,6 +164,7 @@ fun ReviewItem(review: ReviewData) {
 
             // Rating and Published Date
             Row {
+                //image for the rating not working
 //            GlideImage(
 //                imageModel = { review.ratingImageUrl }, // Pass the URL directly
 //            //    contentDescription = null, // You can set this to null since it's decorative
@@ -217,7 +217,7 @@ fun ReviewItem(review: ReviewData) {
                 style = MaterialTheme.typography.bodyMedium
             )
 
-            // Add more details as needed (e.g., subratings, travel date, etc.)
+            // Add more details...
         }
     }
 
@@ -246,7 +246,8 @@ fun NoReviewsUI(onWriteReview: () -> Unit) {
     }
 }
 
-// Function to format date string to a human-readable format
+// Format the data to be more readble
+//should do this for time too (change from 24 hour time?
 private fun formatDate(dateStr: String): String {
     val inputFormat = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'", Locale.US)
     val outputFormat = SimpleDateFormat("MMM dd, yyyy 'at' HH:mm", Locale.US)

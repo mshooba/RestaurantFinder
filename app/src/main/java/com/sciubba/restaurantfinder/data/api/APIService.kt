@@ -17,7 +17,7 @@ const val BASE_URL = "https://eastern-rubie-mattsciubba.koyeb.app/api/"
 
 interface APIService {
 
-    //GETTER FOR THE LOCATION
+
     @GET("locationdetails")
     suspend fun getLocationDetails(): List<LocationItem>
 
@@ -30,20 +30,15 @@ interface APIService {
     @GET("reviews")
     suspend fun getAllReviews(): List<ReviewsItem>
 
-
-
-
-
-
     companion object {
         private var apiService: APIService? = null
 
-        //could not make connection to API without using logging interceptor and OKHttp stuff
         fun getInstance(): APIService {
             if (apiService == null) {
-                // Use logger to see HTTP errors and such
+                // Use logger to see HTTP errors
                 val logging = HttpLoggingInterceptor()
-                logging.setLevel(HttpLoggingInterceptor.Level.BODY) // Change to Level.BODY for more details
+                logging.setLevel(HttpLoggingInterceptor.Level.BODY)
+                // Change to Level.BODY for more details
 
                 // Create a custom OkHttpClient with a new interceptor for the Referer header
                 val client = OkHttpClient.Builder()

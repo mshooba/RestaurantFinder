@@ -3,11 +3,9 @@ import About
 import BottomBar
 import Favorites
 import RestaurantDetail
-import android.os.Build
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
-import androidx.annotation.RequiresApi
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
@@ -29,7 +27,7 @@ import com.sciubba.restaurantfinder.view.RestaurantList
 
 
 class MainActivity : ComponentActivity() {
-    @RequiresApi(Build.VERSION_CODES.N)
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
@@ -47,7 +45,6 @@ class MainActivity : ComponentActivity() {
                     bottomBar = {
                         BottomBar(
                             onHomeClicked = {
-                                currentScreen = "home"
                                 navController.navigate("home")
                             },
                             onFavoriteClicked = {
@@ -92,11 +89,11 @@ class MainActivity : ComponentActivity() {
                                 locationId,
                                 viewModel,
                                 onWriteReview = {
-                                    // Define what should happen when the "Write a Review" button is clicked.
-                                    // For example, you can navigate to a review writing screen here.
+                                   //do something
                                 }
                             )
                         }
+
                         // Listen for navigation changes and update currentScreen
                         navController.addOnDestinationChangedListener { _, destination, _ ->
                             currentScreen = destination.route ?: "home"

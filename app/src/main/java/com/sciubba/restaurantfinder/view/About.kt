@@ -36,22 +36,9 @@ fun About(navController: NavController) {
                 modifier = Modifier.padding(8.dp)
             )
 
-            Text(
-                text = "Discover the Best Restaurants in the World",
-                style = Typography.headlineLarge,
-                color = MaterialTheme.colorScheme.secondary,
-                modifier = Modifier.padding(8.dp)
-            )
 
             Text(
-                text = "A Small Version of TripAdvisor",
-                style = Typography.titleLarge,
-                color = MaterialTheme.colorScheme.tertiary,
-                modifier = Modifier.padding(8.dp)
-            )
-
-            Text(
-                text = "Explore top restaurants in the best food cities around the globe. The API, powered by Koyeb and TripAdvisor, provides you with access to a curated list of restaurants with stunning photos and reviews.",
+                text = "Explore restaurants in the best food cities around the globe. The API, powered by Koyeb and TripAdvisor, provides you with access to a curated list of restaurants with stunning photos and reviews.",
                 style = Typography.bodyMedium,
                 color = MaterialTheme.colorScheme.onBackground,
                 modifier = Modifier.padding(8.dp)
@@ -64,12 +51,12 @@ fun About(navController: NavController) {
 
         // Tutorial section
         item {
-            Text(
-                text = "Tutorials Followed:",
-                style = Typography.titleMedium,
-                color = MaterialTheme.colorScheme.secondary,
-                modifier = Modifier.padding(8.dp)
-            )
+//            Text(
+//                text = "Tutorials Followed:",
+//                style = Typography.titleMedium,
+//                color = MaterialTheme.colorScheme.secondary,
+//                modifier = Modifier.padding(8.dp)
+//            )
 
             Text(
                 text = "Unsplash Image Attribution:",
@@ -100,14 +87,11 @@ fun About(navController: NavController) {
                         .padding(8.dp)
                         .clickable {
                             // Handle click and open the link
-                            // Open the tutorial link
-                            // You can use the link variable here to open the URL
+
                         }
                 )
             }
         }
-
-
 
         // Create a scrollable list of photographers
         val unsplashPhotographers = listOf(

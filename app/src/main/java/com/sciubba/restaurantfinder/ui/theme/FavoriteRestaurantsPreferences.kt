@@ -8,6 +8,11 @@ import androidx.datastore.preferences.preferencesDataStore
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 
+/**
+ * Manages the favorite restaurants preferences using DataStore.
+ * Provides functions to retrieve, add, save, and remove favorite restaurants.
+ */
+
 class FavoriteRestaurantsPreferences(private val context: Context) {
     companion object {
         private val Context.dataStore: DataStore<Preferences> by preferencesDataStore(name = "favorite_restaurants")
@@ -23,7 +28,7 @@ class FavoriteRestaurantsPreferences(private val context: Context) {
         }
     }
 
-    // Function to add a restaurant to favorites
+
     // Function to add a restaurant to favorites
     suspend fun addFavoriteRestaurant(restaurantId: String) {
         context.dataStore.edit { preferences ->
@@ -37,15 +42,11 @@ class FavoriteRestaurantsPreferences(private val context: Context) {
     }
 
     // Function to save the entire set of favorite restaurants
-    // Function to save the entire set of favorite restaurants
     suspend fun saveFavoriteRestaurants(favoriteRestaurantIds: Set<String>) {
         context.dataStore.edit { preferences ->
             preferences[FAVORITE_RESTAURANTS_KEY] = favoriteRestaurantIds
         }
     }
-
-
-
 
     // Function to remove a restaurant from favorites
     suspend fun removeFavoriteRestaurant(restaurantId: String) {
